@@ -22,6 +22,10 @@ class Evento:
         """
         return self.instante < outro.instante
 
+    def __str__(self):
+        return "T: " + str(self.instante) + "\t" + self.__class__.__name__ + " da peca " + str(self.peca) \
+               + " do servico " + str(self.servico)
+
 
 class Chegada(Evento):
     """

@@ -24,6 +24,13 @@ class Servico:
         self.desvio = desvio
         self.nome = nome
 
+    def __str__(self):
+        return self.nome
+
+    def __repr__(self):
+        return "Servico<" + self.nome + ", " + str(self.media) + ", " + str(self.desvio) + ", " \
+               + str(self.numero_maquinas) + ">"
+
     def inserePeca(self, peca):
         """
         Metodo que insere peca no servico

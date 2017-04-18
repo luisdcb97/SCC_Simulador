@@ -7,15 +7,10 @@ class Peca:
     Classe que representa uma peca
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, tipo: int, nome: str = "", custo: float = 0):
+        self.tipo = tipo
+        self.nome = nome
+        self.custo = custo
 
-
-class PecaA(Peca):
-    def __init__(self):
-        super().__init__()
-
-
-class PecaB(Peca):
-    def __init__(self):
-        super().__init__()
+    def __str__(self):
+        return self.nome
