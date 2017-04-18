@@ -1,9 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 import Evento
-import Peca
-import Simulador
 import Aleatorio
 
 
@@ -12,7 +10,7 @@ class Servico:
     Classe que representa um servico
     """
 
-    def __init__(self, sim: Simulador.Simulador, media: float, desvio: float, maquinas: int = 1,
+    def __init__(self, sim, media: float, desvio: float, maquinas: int = 1,
                  nome: str = "ServicoX"):
         self.espera = []
         self.simulador = sim
@@ -26,7 +24,7 @@ class Servico:
         self.desvio = desvio
         self.nome = nome
 
-    def inserePeca(self, peca: Peca.Peca):
+    def inserePeca(self, peca):
         """
         Metodo que insere peca no servico
         """

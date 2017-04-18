@@ -1,10 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # encoding: utf-8
 
 import Peca
 import Aleatorio
-import Simulador
-import Servico
 
 
 class Evento:
@@ -12,7 +10,7 @@ class Evento:
     Classe abstrata da qual sao derivadas todos os eventos
     """
 
-    def __init__(self, inst: float, sim: Simulador.Simulador, servico, peca: Peca.Peca):
+    def __init__(self, inst: float, sim, servico, peca):
         self.instante = inst  # Instante a que o evento ocorre
         self.simulador = sim
         self.servico = servico
@@ -30,7 +28,7 @@ class Chegada(Evento):
     Representa a chegada de uma Peca a um Servico
     """
 
-    def __init__(self, inst: float, sim: Simulador.Simulador, servico, peca: Peca.Peca):
+    def __init__(self, inst: float, sim, servico, peca):
         super().__init__(inst, sim, servico, peca)
 
     def executa(self):
@@ -50,7 +48,7 @@ class Saida(Evento):
     Representa a saida de uma Peca a um Servico, i.e., a libertacao do Servico
     """
 
-    def __init__(self, inst: float, sim: Simulador.Simulador, servico: Servico.Servico, peca: Peca.Peca):
+    def __init__(self, inst: float, sim, servico, peca):
         super().__init__(inst, sim, servico, peca)
 
     def executa(self):
