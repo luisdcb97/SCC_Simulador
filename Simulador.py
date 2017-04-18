@@ -15,9 +15,11 @@ class Simulador:
     """
 
     def __init__(self):
+        # Numero de pecas diferentes
+        self.numero_pecas = 2
+
         # Media das distribuicoes de chegada das pecas
-        self.media_chegada_A = 5
-        self.media_chegada_B = 1.33
+        self.media_chegada_pecas = [5, 1.33]
 
         # Numero de clientes a ser atendidos
         self.n_clientes = 100
@@ -26,21 +28,32 @@ class Simulador:
         self.tempo = 0
 
         # Servicos - pode haver mais que um
-        #   ---> Servicos Peca A
-        self.perfuracao_A = Servico.Servico(self, 2, 0.7, nome="Perfuracao_A")
-        self.polimento_A = Servico.Servico(self, 4, 1.2, nome="Polimento_A")
+        self.matriz_servicos = [[] for i in range(self.numero_pecas)]
         #   ---> Servicos Peca B
-        self.perfuracao_B = Servico.Servico(self, 0.75, 0.3, nome="Perfuracao_B")
-        self.polimento_B = Servico.Servico(self, 3, 1, maquinas=2, nome="Polimento_B")
+        self.matriz_servicos[0].append(Servico.Servico(self, 2, 0.7, nome="Perfuracao_A"))
+        self.matriz_servicos[0].append(Servico.Servico(self, 4, 1.2, nome="Polimento_A"))
+        #   ---> Servicos Peca B
+        self.matriz_servicos[1].append(Servico.Servico(self, 0.75, 0.3, nome="Perfuracao_B"))
+        self.matriz_servicos[1].append(Servico.Servico(self, 3, 1, maquinas=2, nome="Polimento_B"))
         #   ---> Servicos Comuns
-        self.envernizamento = Servico.Servico(self, 1.4, 0.3 / 60, nome="Perfuracao_A")
+        servico = Servico.Servico(self, 1.4, 0.3 / 60, nome="Envernizamento_Comum")
+        self.matriz_servicos[0].append(servico)
+        self.matriz_servicos[1].append(servico)
+
+        self.servicos = []
+        for i in range(len(self.matriz_servicos)):
+            for j in range(len(self.matriz_servicos[i])):
+                if self.matriz_servicos[i][j] not in self.servicos:
+                    self.servicos.append(self.matriz_servicos[i][j])
 
         # Lista de eventos - onde são mantidos todos os eventos da simulacao - Apenas existe uma por simulador
         self.lista = Lista.Lista(self)
 
+        # Tipos de Pecas vendidas
+        self.tipo_pecas = [Peca.Peca(0, "A"), Peca.Peca(1, "B")]
+
         # Numero de pecas vendidas
-        self.vendidas_A = 0
-        self.vendidas_B = 0
+        self.pecas_vendidas = [0 for i in range(self.numero_pecas)]
 
         # Custo construcao do simulador - unidade e o euro
         self.construcao = 50
@@ -49,10 +62,12 @@ class Simulador:
 
         self.pausa = False
 
-        # TODO agendar a primeira chegada
-
     def __str__(self):
         pass
 
-    def insereEvento(self, evento: Evento.Evento):
+    def insereEvento(self, evento):
         self.lista.insere_evento(evento)
+
+    def executa(self):
+        for i in range(self.numero_pecas):
+            self.insereEvento(Evento.Chegada(self.tempo, self, self.matriz_servicos[i][0], self.tipo_pecas[i]))
