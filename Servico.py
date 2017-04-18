@@ -58,7 +58,7 @@ class Servico:
                     self.ocupacao[i] = False
                     break
         else:
-            self.espera.pop(0)
+            peca = self.espera.pop(0)
             self.simulador.insereEvento(
                 Evento.Saida(self.simulador.tempo + Aleatorio.normal(self.media, self.desvio), self.simulador,
-                             self))
+                             self, peca))

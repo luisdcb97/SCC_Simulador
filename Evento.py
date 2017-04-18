@@ -37,14 +37,11 @@ class Chegada(Evento):
 
     def executa(self):
         self.servico.inserePeca(self.peca)
-        if self.servico == self.simulador.perfuracao_A:
-            self.simulador.insereEvento(
-                Chegada(self.simulador.tempo + Aleatorio.exp_neg(self.simulador.media_chegada_A), self.simulador,
-                        self.servico, Peca.PecaA()))
-        elif self.servico == self.simulador.perfuracao_B:
-            self.simulador.insereEvento(
-                Chegada(self.simulador.tempo + Aleatorio.exp_neg(self.simulador.media_chegada_B), self.simulador,
-                        self.servico, Peca.PecaB()))
+        indice = self.peca.tipo
+        if self.servico == self.simulador.matriz_servicos[indice][0]:
+            tempo_extra = Aleatorio.exp_neg(self.simulador.media_chegada_pecas[indice])
+            self.simulador.insereEvento(Chegada(self.simulador.tempo + tempo_extra, self.simulador, self.servico,
+                                                Peca.Peca(self.peca.tipo, self.peca.nome, self.peca.custo)))
 
 
 class Saida(Evento):
@@ -57,17 +54,13 @@ class Saida(Evento):
 
     def executa(self):
         self.servico.retiraPeca()
-        # se peca for do tipo A
-        if self.servico == self.simulador.perfuracao_A:
-            self.simulador.insereEvento(
-                Chegada(self.simulador.tempo, self.simulador, self.simulador.polimento_A, self.peca))
-        elif self.servico == self.simulador.polimento_A:
-            self.simulador.insereEvento(
-                Chegada(self.simulador.tempo, self.simulador, self.simulador.envernizamento, self.peca))
-
-        if self.servico == self.simulador.perfuracao_B:
-            self.simulador.insereEvento(
-                Chegada(self.simulador.tempo, self.simulador, self.simulador.polimento_B, self.peca))
-        elif self.servico == self.simulador.polimento_B:
-            self.simulador.insereEvento(
-                Chegada(self.simulador.tempo, self.simulador, self.simulador.envernizamento, self.peca))
+        indice_peca = self.peca.tipo
+        indice_servico = 0
+        for i in range(self.simulador.matriz_servicos[indice_peca]):
+            if self.simulador.matriz_servicos[indice_peca][i] == self.servico:
+                indice_servico = i
+        if indice_servico + 1 < len(self.simulador.matriz_servicos[indice_peca]):
+            # Manda a peca para o proximo servico para este tipo de peca, caso este exista
+            self.simulador.insereEvento(Chegada(self.simulador.tempo, self.simulador,
+                                                self.simulador.matriz_servicos[indice_peca][indice_servico+1],
+                                                self.peca))
