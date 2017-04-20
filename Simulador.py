@@ -61,6 +61,7 @@ class Simulador:
         self.manutencao = 1
 
         self.pausa = False
+        self.debug = True
 
     def __str__(self):
         pass
@@ -71,3 +72,31 @@ class Simulador:
     def executa(self):
         for i in range(self.numero_pecas):
             self.insereEvento(Evento.Chegada(self.tempo, self, self.matriz_servicos[i][0], self.tipo_pecas[i]))
+        while self.servicos[2].atendidos < self.n_clientes:
+            if self.debug:
+                self.lista.imprime_lista()
+            evento = self.lista.retira_evento()
+            self.tempo = evento.instante
+            self.act_stats()
+            evento.executa()
+        self.relat()
+
+    def act_stats(self):
+        """M�todo que actualiza os valores estat�sticos do simulador"""
+        atualizados = []
+        for i in range(self.numero_pecas):
+            for j in range(len(self.matriz_servicos[i])):
+                if self.matriz_servicos[i][j] not in atualizados:
+                    self.matriz_servicos[i][j].act_stats()
+                    atualizados.append(self.matriz_servicos[i][j])
+
+    def relat(self):
+        """M�todo que apresenta os resultados de simula��o finais"""
+        for i in range(self.numero_pecas):
+            print("\n\n|----------------- Estatisticas finais da Peca " + str(self.tipo_pecas[i]) + " ------------------------|")
+            for j in range(len(self.matriz_servicos[i])):
+                print("\n\n------------FINAL RESULTS " + str(self.matriz_servicos[i][j]) + "---------------\n\n")
+                self.matriz_servicos[i][j].relat()
+
+sim = Simulador()
+sim.executa()
