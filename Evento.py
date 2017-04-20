@@ -56,7 +56,7 @@ class Saida(Evento):
         self.servico.retiraPeca()
         indice_peca = self.peca.tipo
         indice_servico = 0
-        for i in range(self.simulador.matriz_servicos[indice_peca]):
+        for i in range(len(self.simulador.matriz_servicos[indice_peca])):
             if self.simulador.matriz_servicos[indice_peca][i] == self.servico:
                 indice_servico = i
         if indice_servico + 1 < len(self.simulador.matriz_servicos[indice_peca]):
