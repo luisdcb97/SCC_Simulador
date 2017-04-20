@@ -22,6 +22,8 @@ class Lista:
     def imprime_lista(self):
         """
         Imprime todos os eventos na lista
-        Evento --- Instante
         """
-        pass
+        print("\n\n" + str(self.simulador.tempo) + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
+        for eve in self.lista:
+            print(eve)
+        print("\n\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n")
