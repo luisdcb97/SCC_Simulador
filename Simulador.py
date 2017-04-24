@@ -14,7 +14,9 @@ class Simulador:
     A unidade de tempo é o minuto
     """
 
-    def __init__(self):
+    def __init__(self, nome: str = "SimuladorX"):
+        self.nome = nome
+
         # Numero de pecas diferentes
         self.numero_pecas = 2
 
@@ -26,6 +28,12 @@ class Simulador:
 
         # Relogio do simulador - Sempre inicializado a 0
         self.tempo = 0
+
+        # Tempo de funcionamento da simulacao
+        #       Horas de producao por dia
+        self.horas = 0.5  # TODO valor temporario para diminuir o tempo de teste voltar a por a 8 no fim
+        #       Dias da simulacao
+        self.dias = 3
 
         # Servicos - pode haver mais que um
         self.matriz_servicos = [[] for i in range(self.numero_pecas)]
