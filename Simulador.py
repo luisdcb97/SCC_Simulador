@@ -5,6 +5,7 @@ import Evento
 import Lista
 import Servico
 import Peca
+import Registrador
 
 
 class Simulador:
@@ -70,6 +71,11 @@ class Simulador:
 
         self.pausa = False
         self.debug = True
+        self.registrar = True # Atrasa bastante o acesso ao programa
+
+        if self.registrar:
+            self.registo = Registrador.comeca_registo()
+            self.regista_servidor()
 
     def __str__(self):
         pass
@@ -82,17 +88,27 @@ class Simulador:
             self.insereEvento(Evento.Chegada(self.tempo, self, self.matriz_servicos[i][0], self.tipo_pecas[i]))
 
         dias_executados = 0
+
+        if self.registrar:
+            Registrador.regista(self.registo,
+                                "\n______________________Inicio da Simulacao_____________________________\n")
+
         while dias_executados < self.dias:
             temp_string = "\n\n||||||||||||||||||||\n\n"
             temp_string += "->\tDia " + str(dias_executados + 1) + ":"
             temp_string += "\n\n||||||||||||||||||||\n"
             if self.debug:
                 print(temp_string)
+            if self.registrar:
+                Registrador.regista(self.registo, temp_string)
+
             while self.tempo < (self.horas * 60 * (dias_executados + 1)):
                 linhas = self.lista.lista_to_string()
                 for l in linhas:
                     if self.debug:
                         print(l)
+                    if self.registrar:
+                        Registrador.regista(self.registo, l)
                 evento = self.lista.retira_evento()
                 self.tempo = evento.instante
                 self.act_stats()
@@ -101,8 +117,14 @@ class Simulador:
             for linha in strings:
                 print(linha)
 
+            if self.registrar:
+                for l in strings:
+                    Registrador.regista(self.registo, l)
             # input("\n\nPressione Enter para Continuar\n\n")
             dias_executados += 1
+        if self.registrar:
+            print("\nDados de registo salvos em " + Registrador.diretorio_registos + " -> " + self.registo.name)
+
     def act_stats(self):
         """M�todo que actualiza os valores estat�sticos do simulador"""
         atualizados = []
@@ -125,6 +147,34 @@ class Simulador:
                 for string in relat_servico:
                     strings.append(string)
         return strings
+
+    def regista_servidor(self):
+        Registrador.regista(self.registo, "Simulador \"" + self.nome + "\":")
+
+        string = "\tHorario de funcionamento: " + str(self.horas) + " "
+        if self.horas == 1:
+            string += "hora "
+        else:
+            string += "horas "
+        string += "por dia durante " + str(self.dias) + " "
+        if self.dias == 1:
+            string += "dia"
+        else:
+            string += "dias"
+        Registrador.regista(self.registo, string)
+
+        string = "\tTipos de Pecas:\n"
+        for peca in self.tipo_pecas:
+            string += "\t\t" + str(peca) + "\n"
+        Registrador.regista(self.registo, string)
+
+        string = "\tServicos:\n"
+        for i in range(len(self.tipo_pecas)):
+            string += "\t\tPeca " + str(self.tipo_pecas[i].nome) + ":\n"
+            for j in range(len(self.matriz_servicos[i])):
+                string += "\t\t\t" + str(self.matriz_servicos[i][j]) + "\n"
+        Registrador.regista(self.registo, string)
+
 
 sim = Simulador()
 sim.executa()
