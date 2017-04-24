@@ -27,3 +27,11 @@ class Lista:
         for eve in self.lista:
             print(eve)
         print("\n\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n")
+
+    def lista_to_string(self):
+        strings = []
+        strings.append("\n\n" + str(self.simulador.tempo) + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
+        for eve in self.lista:
+            strings.append(str(eve))
+        strings.append("\n\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n")
+        return strings
