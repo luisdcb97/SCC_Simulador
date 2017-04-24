@@ -80,15 +80,29 @@ class Simulador:
     def executa(self):
         for i in range(self.numero_pecas):
             self.insereEvento(Evento.Chegada(self.tempo, self, self.matriz_servicos[i][0], self.tipo_pecas[i]))
-        while self.servicos[2].atendidos < self.n_clientes:
-            if self.debug:
-                self.lista.imprime_lista()
-            evento = self.lista.retira_evento()
-            self.tempo = evento.instante
-            self.act_stats()
-            evento.executa()
-        self.relat()
 
+        dias_executados = 0
+        while dias_executados < self.dias:
+            temp_string = "\n\n||||||||||||||||||||\n\n"
+            temp_string += "->\tDia " + str(dias_executados + 1) + ":"
+            temp_string += "\n\n||||||||||||||||||||\n"
+            if self.debug:
+                print(temp_string)
+            while self.tempo < (self.horas * 60 * (dias_executados + 1)):
+                linhas = self.lista.lista_to_string()
+                for l in linhas:
+                    if self.debug:
+                        print(l)
+                evento = self.lista.retira_evento()
+                self.tempo = evento.instante
+                self.act_stats()
+                evento.executa()
+            strings = self.relat(dias_executados)
+            for linha in strings:
+                print(linha)
+
+            # input("\n\nPressione Enter para Continuar\n\n")
+            dias_executados += 1
     def act_stats(self):
         """M�todo que actualiza os valores estat�sticos do simulador"""
         atualizados = []
@@ -98,13 +112,19 @@ class Simulador:
                     self.matriz_servicos[i][j].act_stats()
                     atualizados.append(self.matriz_servicos[i][j])
 
-    def relat(self):
+    def relat(self, dia: int):
         """M�todo que apresenta os resultados de simula��o finais"""
+        strings = []
         for i in range(self.numero_pecas):
-            print("\n\n|----------------- Estatisticas finais da Peca " + str(self.tipo_pecas[i]) + " ------------------------|")
+            strings.append("\n\n|----------------- Estatisticas do dia " + str(dia + 1) + " da Peca " + str(
+                self.tipo_pecas[i]) + " ------------------------|")
             for j in range(len(self.matriz_servicos[i])):
-                print("\n\n------------FINAL RESULTS " + str(self.matriz_servicos[i][j]) + "---------------\n\n")
-                self.matriz_servicos[i][j].relat()
+                strings.append("\n\n------------ Resultados dia " + str(dia + 1) + " " + str(
+                    self.matriz_servicos[i][j]) + "---------------\n\n")
+                relat_servico = self.matriz_servicos[i][j].relat()
+                for string in relat_servico:
+                    strings.append(string)
+        return strings
 
 sim = Simulador()
 sim.executa()
