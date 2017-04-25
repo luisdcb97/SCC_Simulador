@@ -32,7 +32,7 @@ class Simulador:
 
         # Tempo de funcionamento da simulacao
         #       Horas de producao por dia
-        self.horas = 0.5  # TODO valor temporario para diminuir o tempo de teste voltar a por a 8 no fim
+        self.horas = 8  # TODO valor temporario para diminuir o tempo de teste voltar a por a 8 no fim
         #       Dias da simulacao
         self.dias = 3
 
@@ -45,7 +45,7 @@ class Simulador:
         self.matriz_servicos[1].append(Servico.Servico(self, 0.75, 0.3, nome="Perfuracao_B"))
         self.matriz_servicos[1].append(Servico.Servico(self, 3, 1, maquinas=2, nome="Polimento_B"))
         #   ---> Servicos Comuns
-        servico = Servico.Servico(self, 1.4, 0.3 / 60, nome="Envernizamento_Comum")
+        servico = Servico.Servico(self, 1.4, 0.3 / 60, maquinas = 2, nome="Envernizamento_Comum")
         self.matriz_servicos[0].append(servico)
         self.matriz_servicos[1].append(servico)
 
@@ -70,7 +70,7 @@ class Simulador:
         self.manutencao = 1
 
         self.pausa = False
-        self.debug = True
+        self.debug = False
         self.registrar = True # Atrasa bastante o acesso ao programa
 
         if self.registrar:
