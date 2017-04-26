@@ -90,36 +90,40 @@ class Simulador:
                                 "\n______________________Inicio da Simulacao_____________________________\n")
 
         while dias_executados < self.dias:
-            temp_string = "\n\n||||||||||||||||||||\n\n"
-            temp_string += "->\tDia " + str(dias_executados + 1) + ":"
-            temp_string += "\n\n||||||||||||||||||||\n"
-            if self.debug:
-                print(temp_string)
-            if self.registrar:
-                Registrador.regista(self.registo, temp_string)
-
-            while self.tempo < (self.horas * 60 * (dias_executados + 1)):
-                linhas = self.lista.lista_to_string()
-                for l in linhas:
-                    if self.debug:
-                        print(l)
-                    if self.registrar:
-                        Registrador.regista(self.registo, l)
-                evento = self.lista.retira_evento()
-                self.tempo = evento.instante
-                self.act_stats()
-                evento.executa()
-            strings = self.relat(dias_executados)
-            for linha in strings:
-                print(linha)
-
-            if self.registrar:
-                for l in strings:
-                    Registrador.regista(self.registo, l)
-            # input("\n\nPressione Enter para Continuar\n\n")
+            self.executa_dia(dias_executados)
+            if self.pausa:
+                input("\n\nPressione Enter para Continuar\n\n")
             dias_executados += 1
         if self.registrar:
             print("\nDados de registo salvos em " + Registrador.diretorio_registos + " -> " + self.registo.name)
+
+    def executa_dia(self, dias_executados: int):
+        temp_string = "\n\n||||||||||||||||||||\n\n"
+        temp_string += "->\tDia " + str(dias_executados + 1) + ":"
+        temp_string += "\n\n||||||||||||||||||||\n"
+        if self.debug:
+            print(temp_string)
+        if self.registrar:
+            Registrador.regista(self.registo, temp_string)
+
+        while self.tempo < (self.horas * 60 * (dias_executados + 1)):
+            linhas = self.lista.lista_to_string()
+            for l in linhas:
+                if self.debug:
+                    print(l)
+                if self.registrar:
+                    Registrador.regista(self.registo, l)
+            evento = self.lista.retira_evento()
+            self.tempo = evento.instante
+            self.act_stats()
+            evento.executa()
+        strings = self.relat(dias_executados)
+        for linha in strings:
+            print(linha)
+
+        if self.registrar:
+            for l in strings:
+                Registrador.regista(self.registo, l)
 
     def act_stats(self):
         """M�todo que actualiza os valores estat�sticos do simulador"""
