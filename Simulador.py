@@ -43,7 +43,7 @@ class Simulador:
         self.matriz_servicos[1].append(Servico.Servico(self, 0.75, 0.3, nome="Perfuracao_B"))
         self.matriz_servicos[1].append(Servico.Servico(self, 3, 1, maquinas=2, nome="Polimento_B"))
         #   ---> Servicos Comuns
-        servico = Servico.Servico(self, 1.4, 0.3 / 60, maquinas=2, nome="Envernizamento_Comum")
+        servico = Servico.Servico(self, 1.4, 0.3, maquinas=2, nome="Envernizamento_Comum")
         self.matriz_servicos[0].append(servico)
         self.matriz_servicos[1].append(servico)
 
