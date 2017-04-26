@@ -6,6 +6,7 @@ import Lista
 import Servico
 import Peca
 import Registrador
+import Aleatorio
 
 
 class Simulador:
@@ -22,17 +23,14 @@ class Simulador:
         self.numero_pecas = 2
 
         # Media das distribuicoes de chegada das pecas
-        self.media_chegada_pecas = [5, 1.33]
-
-        # Numero de clientes a ser atendidos
-        self.n_clientes = 100
+        self.media_chegada_pecas = [Aleatorio.exp_neg(5), Aleatorio.exp_neg(1.33)]
 
         # Relogio do simulador - Sempre inicializado a 0
         self.tempo = 0
 
         # Tempo de funcionamento da simulacao
         #       Horas de producao por dia
-        self.horas = 8  # TODO valor temporario para diminuir o tempo de teste voltar a por a 8 no fim
+        self.horas = 8
         #       Dias da simulacao
         self.dias = 3
 
@@ -45,7 +43,7 @@ class Simulador:
         self.matriz_servicos[1].append(Servico.Servico(self, 0.75, 0.3, nome="Perfuracao_B"))
         self.matriz_servicos[1].append(Servico.Servico(self, 3, 1, maquinas=2, nome="Polimento_B"))
         #   ---> Servicos Comuns
-        servico = Servico.Servico(self, 1.4, 0.3 / 60, maquinas = 2, nome="Envernizamento_Comum")
+        servico = Servico.Servico(self, 1.4, 0.3 / 60, maquinas=2, nome="Envernizamento_Comum")
         self.matriz_servicos[0].append(servico)
         self.matriz_servicos[1].append(servico)
 
@@ -59,19 +57,17 @@ class Simulador:
         self.lista = Lista.Lista(self)
 
         # Tipos de Pecas vendidas
-        self.tipo_pecas = [Peca.Peca(0, "A"), Peca.Peca(1, "B")]
+        self.tipo_pecas = [Peca.Peca(0, "A", 0.05), Peca.Peca(1, "B", 0.05)]
 
         # Numero de pecas vendidas
         self.pecas_vendidas = [0 for i in range(self.numero_pecas)]
 
-        # Custo construcao do simulador - unidade e o euro
-        self.construcao = 50
-        # Custo manutencao do simulador - unidade e o euro por dia
-        self.manutencao = 1
+        # Custo inicial de quaisquer alteracoes
+        self.divida = 0
 
         self.pausa = False
         self.debug = False
-        self.registrar = True # Atrasa bastante o acesso ao programa
+        self.registrar = True  # Atrasa bastante o acesso ao programa
 
         if self.registrar:
             self.registo = Registrador.comeca_registo()
