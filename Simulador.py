@@ -146,6 +146,23 @@ class Simulador:
                 relat_servico = self.matriz_servicos[i][j].relat()
                 for string in relat_servico:
                     strings.append(string)
+
+        strings.append("\n\n-----Resultados do dia " + str(dia + 1) + "------------\n\n")
+
+        lucro_total = 0
+        for i in range(self.numero_pecas):
+            strings.append("Peca " + str(self.tipo_pecas[i]) + ":")
+            strings.append("\tPreco por Peca: " + str(self.tipo_pecas[i].custo) + " euros")
+            strings.append("\tPecas Vendidads: " + str(self.pecas_vendidas[i]))
+            lucro = self.pecas_vendidas[i] * self.tipo_pecas[i].custo
+            lucro_total += lucro
+            strings.append("\tLucro total: " + "{:.2f}".format(lucro))
+            strings.append(
+                "\tLucro apos pagar divida: " + "{:.2f}".format(lucro - self.divida))
+
+        strings.append("Lucro total producao: " + "{:.2f}".format(lucro_total))
+        strings.append(
+            "Lucro producao apos pagar divida: " + "{:.2f}".format(lucro_total - self.divida))
         return strings
 
     def regista_servidor(self):
