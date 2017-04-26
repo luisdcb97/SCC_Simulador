@@ -192,6 +192,42 @@ class Simulador:
                 string += "\t\t\t" + str(self.matriz_servicos[i][j]) + "\n"
         Registrador.regista(self.registo, string)
 
+    def limpa_servicos(self):
+        self.matriz_servicos = [[] for i in range(self.numero_pecas)]
+        self.servicos = []
 
-sim = Simulador()
-sim.executa()
+    def restora_lista_servicos(self):
+        self.servicos = []
+        for i in range(len(self.matriz_servicos)):
+            for j in range(len(self.matriz_servicos[i])):
+                if self.matriz_servicos[i][j] not in self.servicos:
+                    self.servicos.append(self.matriz_servicos[i][j])
+
+    def remove_servico(self, peca, indice):
+        self.matriz_servicos[peca.tipo] = self.matriz_servicos[peca.tipo][:indice] + self.matriz_servicos[peca.tipo][
+                                                                                     indice + 1:]
+
+    def altera_maquinas_servico(self, indice: int, maquinas: int):
+        self.servicos[indice].numero_maquinas = maquinas
+
+    def altera_tempo_servico(self, indice: int, media: float, desvio: float):
+        self.servicos[indice].media = media
+        self.servicos[indice].desvio = desvio
+
+    def restora_simulador(self):
+        self.tempo = 0
+        self.lista = Lista.Lista(self)
+        self.pecas_vendidas = [0 for i in range(self.numero_pecas)]
+        for serv in self.servicos:
+            serv.espera = []
+            serv.ocupadas = 0
+            serv.temp_ultimo = self.tempo
+            serv.soma_temp_espera = 0
+            serv.soma_temp_servico = 0
+
+
+if __name__ == "__main__":
+    sim = Simulador()
+    sim.executa()
+    sim.restora_simulador()
+    sim.executa()
