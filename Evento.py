@@ -39,7 +39,7 @@ class Chegada(Evento):
         self.servico.inserePeca(self.peca)
         indice = self.peca.tipo
         if self.servico == self.simulador.matriz_servicos[indice][0]:
-            tempo_extra = Aleatorio.exp_neg(self.simulador.media_chegada_pecas[indice])
+            tempo_extra = self.simulador.media_chegada_pecas[indice]
             self.simulador.insereEvento(Chegada(self.simulador.tempo + tempo_extra, self.simulador, self.servico,
                                                 Peca.Peca(self.peca.tipo, self.peca.nome, self.peca.custo)))
 
