@@ -64,3 +64,5 @@ class Saida(Evento):
             self.simulador.insereEvento(Chegada(self.simulador.tempo, self.simulador,
                                                 self.simulador.matriz_servicos[indice_peca][indice_servico+1],
                                                 self.peca))
+        else:
+            self.simulador.pecas_vendidas[indice_peca] += 1
