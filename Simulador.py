@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
+import rand_generator
 import Evento
 import Lista
 import Servico
@@ -88,6 +89,7 @@ class Simulador:
     def executa(self):
         for i in range(self.numero_pecas):
             self.insereEvento(Evento.Chegada(self.tempo, self, self.matriz_servicos[i][0], self.tipo_pecas[i]))
+            rand_generator.randst(self.tipo_pecas[i].semente, self.tipo_pecas[i].stream, self.tipo_pecas[i].seed_aleatoria)
 
         dias_executados = 0
 
