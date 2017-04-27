@@ -5,7 +5,7 @@ import rand_generator
 import math
 
 
-def exp_neg(stream: int, media: float = 1) -> float:
+def exp_neg(stream: int, media: float = 1):
     """
     Retorna um valor aleatorio seguindo uma distribuicao exponencial de media "media"
 
@@ -28,14 +28,13 @@ def gerador_dist_normal(stream: int, media: float, desvio: float):
             break
 
     # w esta entre 0 e 1, exclusive no 0
-    y1 = math.sqrt(v1 * (-2 * math.log(w) / w))
-    y2 = math.sqrt(v2 * (-2 * math.log(w) / w))
+    y1 = v1 * math.sqrt((-2 * math.log(w) / w))
+    y2 = v2 * math.sqrt((-2 * math.log(w) / w))
 
     X1 = media + y1 * desvio
     X2 = media + y2 * desvio
 
     # Apenas fornecemos os valores se forem maiores que 0
-    # A keyword
 
     if X1 > 0:
         yield X1
