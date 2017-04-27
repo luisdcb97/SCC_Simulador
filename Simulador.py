@@ -19,11 +19,13 @@ class Simulador:
     def __init__(self, nome: str = "SimuladorX"):
         self.nome = nome
 
+        self.pausa = False
+        self.debug = False
+        self.registrar = True  # Atrasa bastante o acesso ao programa
+        self.seed_aleatoria = False
+
         # Numero de pecas diferentes
         self.numero_pecas = 2
-
-        # Media das distribuicoes de chegada das pecas
-        self.media_chegada_pecas = [Aleatorio.exp_neg(5), Aleatorio.exp_neg(1.33)]
 
         # Relogio do simulador - Sempre inicializado a 0
         self.tempo = 0
@@ -37,13 +39,13 @@ class Simulador:
         # Servicos - pode haver mais que um
         self.matriz_servicos = [[] for i in range(self.numero_pecas)]
         #   ---> Servicos Peca B
-        self.matriz_servicos[0].append(Servico.Servico(self, 2, 0.7, nome="Perfuracao_A"))
-        self.matriz_servicos[0].append(Servico.Servico(self, 4, 1.2, nome="Polimento_A"))
+        self.matriz_servicos[0].append(Servico.Servico(self, 2, 0.7, 10 * 1111111, 10, nome="Perfuracao_A"))
+        self.matriz_servicos[0].append(Servico.Servico(self, 4, 1.2, 11 * 1111111, 11, nome="Polimento_A"))
         #   ---> Servicos Peca B
-        self.matriz_servicos[1].append(Servico.Servico(self, 0.75, 0.3, nome="Perfuracao_B"))
-        self.matriz_servicos[1].append(Servico.Servico(self, 3, 1, maquinas=2, nome="Polimento_B"))
+        self.matriz_servicos[1].append(Servico.Servico(self, 0.75, 0.3, 12 * 1111111, 12, nome="Perfuracao_B"))
+        self.matriz_servicos[1].append(Servico.Servico(self, 3, 1, 13 * 1111111, 13, maquinas=2, nome="Polimento_B"))
         #   ---> Servicos Comuns
-        servico = Servico.Servico(self, 1.4, 0.3, maquinas=2, nome="Envernizamento_Comum")
+        servico = Servico.Servico(self, 1.4, 0.3, 14 * 1111111, 14, maquinas=2, nome="Envernizamento_Comum")
         self.matriz_servicos[0].append(servico)
         self.matriz_servicos[1].append(servico)
 
@@ -57,17 +59,15 @@ class Simulador:
         self.lista = Lista.Lista(self)
 
         # Tipos de Pecas vendidas
-        self.tipo_pecas = [Peca.Peca(0, "A", 0.05), Peca.Peca(1, "B", 0.05)]
+        self.tipo_pecas = [
+            Peca.Peca(0, 0 * 1000000, 0, 5, Aleatorio.exp_neg, "A", 0.05, seed_aleatoria=self.seed_aleatoria),
+            Peca.Peca(1, 1 * 1000000, 1, 1.33, Aleatorio.exp_neg, "B", 0.05, seed_aleatoria=self.seed_aleatoria)]
 
         # Numero de pecas vendidas
         self.pecas_vendidas = [0 for i in range(self.numero_pecas)]
 
         # Custo inicial de quaisquer alteracoes
         self.divida = 0
-
-        self.pausa = False
-        self.debug = False
-        self.registrar = True  # Atrasa bastante o acesso ao programa
 
         if self.registrar:
             self.registo = Registrador.comeca_registo()
@@ -78,6 +78,12 @@ class Simulador:
 
     def insereEvento(self, evento):
         self.lista.insere_evento(evento)
+
+    def altera_aleatoriedade(self, altera: bool):
+        for serv in self.servicos:
+            serv.altera_aleatoriedade(altera)
+        for peca in self.tipo_pecas:
+            peca.altera_aleatoriedade(altera)
 
     def executa(self):
         for i in range(self.numero_pecas):
