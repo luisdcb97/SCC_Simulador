@@ -33,7 +33,7 @@ class Simulador:
         #       Horas de producao por dia
         self.horas = 8
         #       Dias da simulacao
-        self.dias = 3
+        self.dias = 20
 
         # Servicos - pode haver mais que um
         self.matriz_servicos = [[] for i in range(self.numero_pecas)]
