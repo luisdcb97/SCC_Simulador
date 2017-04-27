@@ -39,9 +39,10 @@ class Chegada(Evento):
         self.servico.inserePeca(self.peca)
         indice = self.peca.tipo
         if self.servico == self.simulador.matriz_servicos[indice][0]:
-            tempo_extra = self.peca.chegada
+            tempo_extra = self.peca.get_chegada()
             self.simulador.insereEvento(Chegada(self.simulador.tempo + tempo_extra, self.simulador, self.servico,
-                                                Peca.Peca(self.peca.tipo, self.peca.nome, self.peca.custo)))
+                                                Peca.Peca(self.peca.tipo, self.peca.semente, self.peca.stream,
+                                                          self.peca.media, nome=self.peca.nome, custo=self.peca.custo)))
 
 
 class Saida(Evento):
@@ -62,7 +63,7 @@ class Saida(Evento):
         if indice_servico + 1 < len(self.simulador.matriz_servicos[indice_peca]):
             # Manda a peca para o proximo servico para este tipo de peca, caso este exista
             self.simulador.insereEvento(Chegada(self.simulador.tempo, self.simulador,
-                                                self.simulador.matriz_servicos[indice_peca][indice_servico+1],
+                                                self.simulador.matriz_servicos[indice_peca][indice_servico + 1],
                                                 self.peca))
         else:
             self.simulador.pecas_vendidas[indice_peca] += 1
