@@ -40,6 +40,22 @@ class Servico:
         return "Servico<" + self.nome + ", " + str(self.media) + ", " + str(self.desvio) + ", " \
                + str(self.numero_maquinas) + ">"
 
+    def altera_aleatoriedade(self, altera: bool):
+        rand_generator.randst(self.semente, self.stream, altera)
+
+    def get_tempo(self):
+        # GENERATOR POWER
+        tempo = None
+        while tempo is None:
+            try:
+                tempo = next(self.gerador)
+            except TypeError:
+                self.gerador = Aleatorio.gerador_dist_normal(self.stream, self.media, self.desvio)
+            except StopIteration:
+                self.gerador = Aleatorio.gerador_dist_normal(self.stream, self.media, self.desvio)
+
+        return tempo
+
     def inserePeca(self, peca):
         """
         Metodo que insere peca no servico
@@ -48,7 +64,7 @@ class Servico:
         if self.ocupadas < self.numero_maquinas:
             self.ocupadas += 1
             self.simulador.insereEvento(
-                Evento.Saida(self.simulador.tempo + Aleatorio.normal(self.media, self.desvio), self.simulador,
+                Evento.Saida(self.simulador.tempo + self.get_tempo(), self.simulador,
                              self, peca))
         else:
             self.espera.append(peca)
@@ -63,7 +79,7 @@ class Servico:
         else:
             peca = self.espera.pop(0)
             self.simulador.insereEvento(
-                Evento.Saida(self.simulador.tempo + Aleatorio.normal(self.media, self.desvio), self.simulador,
+                Evento.Saida(self.simulador.tempo + self.get_tempo(), self.simulador,
                              self, peca))
 
     def act_stats(self):
