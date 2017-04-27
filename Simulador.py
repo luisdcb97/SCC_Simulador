@@ -71,7 +71,7 @@ class Simulador:
 
         if self.registrar:
             self.registo = Registrador.comeca_registo()
-            self.regista_servidor()
+            self.regista_servidor() 
 
     def __str__(self):
         pass
