@@ -30,7 +30,7 @@ class Lista:
 
     def lista_to_string(self):
         strings = []
-        strings.append("\n\n" + str(self.simulador.tempo) + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
+        strings.append("\n\nRelogio do simulador: " + "{:.5f}".format(self.simulador.tempo) + "\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n")
         for eve in self.lista:
             strings.append(str(eve))
         strings.append("\n\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n")
