@@ -59,11 +59,12 @@ class Simulador:
 
         # Tipos de Pecas vendidas
         self.tipo_pecas = [
-            Peca.Peca(0, 0 * 1000000, 0, 5, Aleatorio.exp_neg, "A", 0.05, seed_aleatoria=self.seed_aleatoria),
-            Peca.Peca(1, 1 * 1000000, 1, 1.33, Aleatorio.exp_neg, "B", 0.05, seed_aleatoria=self.seed_aleatoria)]
+            Peca.Peca(0, 1 * 1000000, 1, 5, Aleatorio.exp_neg, "A", 0.05, seed_aleatoria=self.seed_aleatoria),
+            Peca.Peca(1, 2 * 1000000, 2, 1.33, Aleatorio.exp_neg, "B", 0.05, seed_aleatoria=self.seed_aleatoria)]
 
         # Numero de pecas vendidas
         self.pecas_vendidas = [0 for i in range(self.numero_pecas)]
+        self.pecas_criadas = [0 for i in range(self.numero_pecas)]
 
         # Custo inicial de quaisquer alteracoes
         self.divida = 0
