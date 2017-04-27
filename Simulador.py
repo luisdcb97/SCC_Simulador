@@ -16,13 +16,12 @@ class Simulador:
     A unidade de tempo é o minuto
     """
 
-    def __init__(self, nome: str = "SimuladorX"):
+    def __init__(self, nome: str = "SimuladorX", debug: bool = False, registrar: bool = True, aleatorio: bool = False):
         self.nome = nome
 
-        self.pausa = False
-        self.debug = False
-        self.registrar = True  # Atrasa bastante o acesso ao programa
-        self.seed_aleatoria = False
+        self.debug = debug
+        self.registrar = registrar  # Atrasa bastante o acesso ao programa
+        self.seed_aleatoria = aleatorio
 
         # Numero de pecas diferentes
         self.numero_pecas = 2
