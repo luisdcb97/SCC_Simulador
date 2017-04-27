@@ -3,6 +3,7 @@
 
 import Evento
 import Aleatorio
+import rand_generator
 
 
 class Servico:
@@ -10,7 +11,7 @@ class Servico:
     Classe que representa um servico
     """
 
-    def __init__(self, sim, media: float, desvio: float, maquinas: int = 1,
+    def __init__(self, sim, media: float, desvio: float, semente: int, stream: int, maquinas: int = 1,
                  nome: str = "ServicoX"):
         self.espera = []
         self.simulador = sim
@@ -25,6 +26,12 @@ class Servico:
         self.media = media
         self.desvio = desvio
         self.nome = nome
+
+        self.semente = semente
+        self.stream = stream
+        self.gerador = None
+
+        rand_generator.randst(semente, stream, sim.seed_aleatoria)
 
     def __str__(self):
         return self.nome
