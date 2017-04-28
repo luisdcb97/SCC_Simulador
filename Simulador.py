@@ -144,6 +144,8 @@ class Simulador:
         if self.registrar:
             for l in strings:
                 Registrador.regista(self.registo, l)
+            if self.gui_stream is not None:
+                self.gui_stream.append("\nDados de registo salvos em " + Registrador.diretorio_registos + " -> " + self.registo.name)
             print("\nDados de registo salvos em " + Registrador.diretorio_registos + " -> " + self.registo.name)
 
     def executa_dia(self, dias_executados: int):
@@ -262,6 +264,9 @@ class Simulador:
     def altera_tempo_servico(self, indice: int, media: float, desvio: float):
         self.servicos[indice].media = media
         self.servicos[indice].desvio = desvio
+
+    def altera_tempo_chegada(self, indice: int, media: float):
+        self.tipo_pecas[indice].altera_media(media)
 
     def restora_simulador(self):
         self.tempo = 0
