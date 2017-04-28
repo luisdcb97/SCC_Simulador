@@ -17,7 +17,8 @@ class Simulador:
     A unidade de tempo é o minuto
     """
 
-    def __init__(self, nome: str = "SimuladorX", debug: bool = False, registrar: bool = True, aleatorio: bool = False, gui_stream: list = None):
+    def __init__(self, nome: str = "SimuladorX", debug: bool = False, registrar: bool = True, aleatorio: bool = False,
+                 gui_stream: list = None):
         self.nome = nome
 
         self.debug = debug
@@ -26,6 +27,9 @@ class Simulador:
 
         # Representa o sitio onde são adicionados os prints caso queiramos imprimir num GUI e não na consola
         self.gui_stream = gui_stream
+
+        if gui_stream is not None:
+            self.debug = False
 
         # Numero de pecas diferentes
         self.numero_pecas = 2
@@ -75,10 +79,34 @@ class Simulador:
 
         if self.registrar:
             self.registo = Registrador.comeca_registo()
-            self.regista_servidor() 
+            self.regista_servidor()
 
     def __str__(self):
-        pass
+        string = ""
+        string += "Simulador \"" + self.nome + "\":\n"
+
+        string += "\tHorario de funcionamento: " + str(self.horas) + " "
+        if self.horas == 1:
+            string += "hora "
+        else:
+            string += "horas "
+        string += "por dia durante " + str(self.dias) + " "
+        if self.dias == 1:
+            string += "dia"
+        else:
+            string += "dias"
+
+        string += "\n\tTipos de Pecas:\n"
+        for peca in self.tipo_pecas:
+            string += "\t\t" + str(peca) + "\n"
+
+        string += "\n\tServicos:\n"
+        for i in range(len(self.tipo_pecas)):
+            string += "\t\tPeca " + str(self.tipo_pecas[i].nome) + ":\n"
+            for j in range(len(self.matriz_servicos[i])):
+                string += "\t\t\t" + str(self.matriz_servicos[i][j]) + "\n"
+
+        return string
 
     def insereEvento(self, evento):
         self.lista.insere_evento(evento)
@@ -92,7 +120,8 @@ class Simulador:
     def executa(self):
         for i in range(self.numero_pecas):
             self.insereEvento(Evento.Chegada(self.tempo, self, self.matriz_servicos[i][0], self.tipo_pecas[i]))
-            rand_generator.randst(self.tipo_pecas[i].semente, self.tipo_pecas[i].stream, self.tipo_pecas[i].seed_aleatoria)
+            rand_generator.randst(self.tipo_pecas[i].semente, self.tipo_pecas[i].stream,
+                                  self.tipo_pecas[i].seed_aleatoria)
 
         dias_executados = 0
 
@@ -102,6 +131,7 @@ class Simulador:
 
         while dias_executados < self.dias:
             self.executa_dia(dias_executados)
+            print("Dia executado: " + str(dias_executados + 1))
             dias_executados += 1
 
         strings = self.relat()
@@ -142,7 +172,6 @@ class Simulador:
             self.tempo = evento.instante
             self.act_stats()
             evento.executa()
-
 
     def act_stats(self):
         """M�todo que actualiza os valores estat�sticos do simulador"""
@@ -247,5 +276,6 @@ class Simulador:
 
 
 if __name__ == "__main__":
-    sim = Simulador(registrar=True, aleatorio=True)
+    sim = Simulador(registrar=True)
+    print(str(sim))
     sim.executa()
