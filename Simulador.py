@@ -268,6 +268,12 @@ class Simulador:
     def altera_tempo_chegada(self, indice: int, media: float):
         self.tipo_pecas[indice].altera_media(media)
 
+    def altera_horas(self, horas: int):
+        self.horas = horas
+
+    def altera_dias(self, dias: int):
+        self.dias = dias
+
     def restora_simulador(self):
         self.tempo = 0
         self.lista = Lista.Lista(self)
