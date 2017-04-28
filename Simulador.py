@@ -17,12 +17,15 @@ class Simulador:
     A unidade de tempo é o minuto
     """
 
-    def __init__(self, nome: str = "SimuladorX", debug: bool = False, registrar: bool = True, aleatorio: bool = False):
+    def __init__(self, nome: str = "SimuladorX", debug: bool = False, registrar: bool = True, aleatorio: bool = False, gui_stream: list = None):
         self.nome = nome
 
         self.debug = debug
         self.registrar = registrar  # Atrasa bastante o acesso ao programa
         self.seed_aleatoria = aleatorio
+
+        # Representa o sitio onde são adicionados os prints caso queiramos imprimir num GUI e não na consola
+        self.gui_stream = gui_stream
 
         # Numero de pecas diferentes
         self.numero_pecas = 2
@@ -102,8 +105,11 @@ class Simulador:
             dias_executados += 1
 
         strings = self.relat()
-        for linha in strings:
-            print(linha)
+        if self.gui_stream is None:
+            for linha in strings:
+                print(linha)
+        else:
+            self.gui_stream.extend(strings)
 
         if self.registrar:
             for l in strings:
@@ -115,7 +121,10 @@ class Simulador:
         temp_string += "->\tDia " + str(dias_executados + 1) + ":"
         temp_string += "\n\n||||||||||||||||||||\n"
         if self.debug:
-            print(temp_string)
+            if self.gui_stream is None:
+                print(temp_string)
+            else:
+                self.gui_stream.append(temp_string)
         if self.registrar:
             Registrador.regista(self.registo, temp_string)
 
@@ -123,7 +132,10 @@ class Simulador:
             linhas = self.lista.lista_to_string()
             for l in linhas:
                 if self.debug:
-                    print(l)
+                    if self.gui_stream is None:
+                        print(l)
+                    else:
+                        self.gui_stream.append(l)
                 if self.registrar:
                     Registrador.regista(self.registo, l)
             evento = self.lista.retira_evento()
