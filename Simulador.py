@@ -283,19 +283,38 @@ class Simulador:
     def altera_dias(self, dias: int):
         self.dias = dias
 
+    def altera_registrar(self, altera: bool):
+        if not self.registo and altera:
+            self.registo = Registrador.comeca_registo()
+
     def restora_simulador(self):
         self.tempo = 0
         self.lista = Lista.Lista(self)
         self.pecas_vendidas = [0 for i in range(self.numero_pecas)]
+        self.pecas_criadas = [0 for i in range(self.numero_pecas)]
         for serv in self.servicos:
-            serv.espera = []
-            serv.ocupadas = 0
-            serv.temp_ultimo = self.tempo
-            serv.soma_temp_espera = 0
-            serv.soma_temp_servico = 0
+            serv.restora_servico()
+
+        if self.registrar:
+            self.registo = Registrador.comeca_registo()
+            Registrador.regista(self.registo, str(self))
+        else:
+            self.registo = None
+
+
+def altera_string(string: str, prefixo: str, adiciona: str) -> str:
+    nova = ""
+    (antes, sep, depois) = string.partition(prefixo)
+    while sep != "":
+        nova += (adiciona + antes + sep)
+        (antes, sep, depois) = depois.partition(prefixo)
+    nova += adiciona + antes
+    return nova
 
 
 if __name__ == "__main__":
     sim = Simulador(registrar=True)
+    # sim.altera_dias(20)
+    # sim.altera_horas(8)
     print(str(sim))
     sim.executa()
