@@ -39,4 +39,15 @@ class Peca:
         self.seed_aleatoria = altera
 
     def __str__(self):
-        return self.nome
+        string = self.nome + "\n"
+        string += "\t-> Custo: " + str(self.custo) + "\n"
+        string += "\t-> Media Chegada: " + str(self.media) + "\n"
+        if self.metodo:
+            string += "\t-> Metodo Chegada: " + str(self.metodo.__name__) + "\n"
+
+        string += "\t-> Stream: " + str(self.stream) + "\n"
+        string += "\t-> Semente: " + str(self.semente)
+        if self.seed_aleatoria:
+            string += "\t[Aleatoria]"
+        string += "\n"
+        return string
