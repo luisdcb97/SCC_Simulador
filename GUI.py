@@ -34,13 +34,12 @@ class GUI:
 
         self.botao_corre = Button(self.top_frame, text="Correr", bg="#3A3F42", fg="#2AAF51", font=("Arial", 18, "bold"),
                                   relief=RAISED, activebackground="#2AAF51", activeforeground="#3A3F42",
-                                  command=self.corre_simulador)
+                                  command=self.corre_simulador, state=DISABLED)
 
         self.botao_restora = Button(self.top_frame, text="Restora", bg="#3A3F42", fg="#2AAF51",
-                                    font=("Arial", 18, "bold"),
+                                    font=("Arial", 18, "bold"), state=DISABLED,
                                     relief=RAISED, activebackground="#2AAF51", activeforeground="#3A3F42",
                                     command=self.restora_simulador)
-        self.altera_estado_botao(self.botao_restora, DISABLED)
 
         self.botao_cria = Button(self.side_frame, text="Cria", bg="#3A3F42", fg="#2AAF51",
                                  font=("Arial", 18, "bold"),
