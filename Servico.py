@@ -34,7 +34,17 @@ class Servico:
         rand_generator.randst(semente, stream, sim.seed_aleatoria)
 
     def __str__(self):
-        return self.nome
+        string = self.nome + "\n"
+        string += "\t-> Media Chegada: " + str(self.media) + " minutos\n"
+        string += "\t-> Desvio Chegada: " + str(self.desvio) + " minutos\n"
+        string += "\t-> Numero Maquinas: " + str(self.numero_maquinas) + "\n"
+
+        string += "\t-> Stream: " + str(self.stream) + "\n"
+        string += "\t-> Semente: " + str(self.semente)
+        if self.simulador.seed_aleatoria:
+            string += "\t[Aleatoria]"
+        string += "\n"
+        return string
 
     def __repr__(self):
         return "Servico<" + self.nome + ", " + str(self.media) + ", " + str(self.desvio) + ", " \
