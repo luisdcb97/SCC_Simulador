@@ -271,7 +271,7 @@ class Simulador:
                                                                                      indice + 1:]
 
     def altera_maquinas_servico(self, indice: int, maquinas: int):
-        self.servicos[indice].altera_maquinas_servico(maquinas)
+        self.servicos[indice].altera_maquinas(maquinas)
 
     def altera_tempo_servico(self, indice: int, media: float, desvio: float):
         self.servicos[indice].altera_tempo(media, desvio)
