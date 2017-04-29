@@ -79,13 +79,22 @@ class Simulador:
 
         if self.registrar:
             self.registo = Registrador.comeca_registo()
-            self.regista_servidor()
+            Registrador.regista(self.registo, str(self))
+        else:
+            self.registo = None
 
     def __str__(self):
         string = ""
         string += "Simulador \"" + self.nome + "\":\n"
 
-        string += "\tHorario de funcionamento: " + str(self.horas) + " "
+        if self.debug:
+            string += "\tModo Debug\n"
+        if self.registrar:
+            string += "\tA registar valores em " + Registrador.diretorio_registos + " -> " + self.registo.name + "\n"
+        if self.seed_aleatoria:
+            string += "\tA usar seeds aleatorias\n"
+
+        string += "\n\tHorario de funcionamento: " + str(self.horas) + " "
         if self.horas == 1:
             string += "hora "
         else:
@@ -98,13 +107,13 @@ class Simulador:
 
         string += "\n\tTipos de Pecas:\n"
         for peca in self.tipo_pecas:
-            string += "\t\t" + str(peca) + "\n"
+            string += altera_string(str(peca), "\t", "\t\t") + "\n"
 
         string += "\n\tServicos:\n"
         for i in range(len(self.tipo_pecas)):
             string += "\t\tPeca " + str(self.tipo_pecas[i].nome) + ":\n"
             for j in range(len(self.matriz_servicos[i])):
-                string += "\t\t\t" + str(self.matriz_servicos[i][j]) + "\n"
+                string += altera_string(str(self.matriz_servicos[i][j]), "\t", "\t\t\t") + "\n"
 
         return string
 
