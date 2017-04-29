@@ -12,6 +12,8 @@ altura_minima_janela = 560
 class GUI:
     def __init__(self):
         self.raiz = Tk()
+        self.raiz.wm_title("Primórdios de um Império Fabril")
+        self.raiz.iconbitmap("Icon.ico")
         self.dimensoes_minimas = {"largura": 800, "altura": 560}
         self.raiz.minsize(width=self.dimensoes_minimas["largura"], height=self.dimensoes_minimas["altura"])
 
