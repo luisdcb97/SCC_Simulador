@@ -68,6 +68,18 @@ class GUI:
         self.check_seed_aleatoria = Checkbutton(self.side_frame, text="Seed Aleatoria",
                                                 command=self.altera_seed_aleatoria, variable=self.seed_aleatoria)
 
+        self.frame_dias = LabelFrame(self.side_frame, text="Dias")
+        self.frame_horas = LabelFrame(self.side_frame, text="Horas")
+
+        self.entry_dias = Entry(self.frame_dias, state=DISABLED)
+        self.entry_dias.bind("<FocusIn>", self.altera_foco_escrita)
+        self.entry_dias.bind("<FocusOut>", self.altera_foco_escrita)
+        self.entry_dias.bind("<Return>", self.insere_dia)
+        self.entry_horas = Entry(self.frame_horas, state=DISABLED)
+        self.entry_horas.bind("<FocusIn>", self.altera_foco_escrita)
+        self.entry_horas.bind("<FocusOut>", self.altera_foco_escrita)
+        self.entry_horas.bind("<Return>", self.insere_hora)
+
         # Colocar os frames na aplicacao
         self.side_frame.pack(side=LEFT, fill=Y)
         self.top_frame.pack(side=TOP, fill=X)
@@ -82,9 +94,14 @@ class GUI:
         self.botao_cria.pack(side=TOP)
         self.botao_cria_c1.pack(side=TOP)
         self.botao_cria_c2.pack(side=TOP)
+        self.frame_dias.pack()
+        self.frame_horas.pack()
         self.check_debug.pack(side=BOTTOM)
         self.check_registrar.pack(side=BOTTOM)
         self.check_seed_aleatoria.pack(side=BOTTOM)
+
+        self.entry_dias.pack()
+        self.entry_horas.pack()
 
         self.simulador = None
         self.stream = []
@@ -182,6 +199,49 @@ class GUI:
     def altera_estado_check(self, botao: Checkbutton, estado):
         if estado == NORMAL or estado == DISABLED:
             botao.config(state=estado)
+
+    def altera_foco_escrita(self, evento):
+        widget = evento.widget
+        if int(evento.type) == 9:
+            widget.config(bg="blue", fg="white")
+        elif int(evento.type) == 10:
+            widget.config(bg="white", fg="black")
+
+    def insere_dia(self, evento):
+        widget = evento.widget
+        try:
+            valor = int(widget.get())
+        except ValueError:
+            self.entry_flash(widget)
+            widget.delete("1", END)
+            return
+        if valor < 1:
+            self.entry_flash(widget)
+        else:
+            self.simulador.altera_dias(valor)
+            self.adiciona_texto(self.consola, "Simulador alterado para correr durante " + str(valor) + " dias")
+
+
+    def insere_hora(self, evento):
+        widget = evento.widget
+        try:
+            valor = float(widget.get())
+        except ValueError:
+            self.entry_flash(widget)
+            widget.delete("1", END)
+            return
+        if valor < 0:
+            self.entry_flash(widget)
+        else:
+            self.simulador.altera_horas(valor)
+            self.adiciona_texto(self.consola, "Simulador alterado para correr durante " + str(valor) + " horas por dia")
+
+    def entry_flash(self, widget: Widget):
+        cor_original = widget.cget("bg")
+        tempo = 250
+        for i in range(1, 10, 2):
+            widget.after(i*tempo, lambda: widget.config(bg="red"))
+            widget.after((i+1)*tempo, lambda: widget.config(bg=cor_original))
 
     @staticmethod
     def centra_janela(janela: Tk):
