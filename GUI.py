@@ -113,24 +113,18 @@ class GUI:
         self.adiciona_texto(self.consola, str(self.simulador) + "\nSimulador pronto a correr!!!")
         self.altera_estado_botao(self.botao_corre, NORMAL)
         self.altera_estado_botao(self.botao_restora, DISABLED)
+        self.entry_dias.config(state=NORMAL)
+        self.entry_horas.config(state=NORMAL)
+        self.entry_dias.insert("1", str(self.simulador.dias))
+        self.entry_horas.insert("1", str(self.simulador.horas))
 
     def cria_simulador_c1(self):
-        self.stream.clear()
-        self.simulador = Simulador.Simulador(registrar=self.registrar.get(), debug=self.debug.get(),
-                                             aleatorio=self.seed_aleatoria.get(), gui_stream=self.stream)
+        self.cria_simulador()
         self.simulador.altera_maquinas_servico(4, 3)
-        self.adiciona_texto(self.consola, str(self.simulador) + "\nSimulador pronto a correr!!!")
-        self.altera_estado_botao(self.botao_corre, NORMAL)
-        self.altera_estado_botao(self.botao_restora, DISABLED)
 
     def cria_simulador_c2(self):
-        self.stream.clear()
-        self.simulador = Simulador.Simulador(registrar=self.registrar.get(), debug=self.debug.get(),
-                                             aleatorio=self.seed_aleatoria.get(), gui_stream=self.stream)
+        self.cria_simulador()
         self.simulador.altera_tempo_servico(4, 1.7, 1)
-        self.adiciona_texto(self.consola, str(self.simulador) + "\nSimulador pronto a correr!!!")
-        self.altera_estado_botao(self.botao_corre, NORMAL)
-        self.altera_estado_botao(self.botao_restora, DISABLED)
 
     def corre_simulador(self):
         if self.simulador is not None:
