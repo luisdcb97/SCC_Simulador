@@ -78,9 +78,10 @@ class GUI:
         self.stream = []
 
     def cria_simulador(self):
-        self.simulador = Simulador.Simulador(registrar=True, gui_stream=self.stream)
-        self.adiciona_texto(self.consola, "\nSimulador criado")
-        self.adiciona_texto(self.consola, str(self.simulador))
+        self.simulador = Simulador.Simulador(registrar=self.registrar.get(), debug=self.debug.get(),
+                                             aleatorio=self.seed_aleatoria.get(), gui_stream=self.stream)
+        self.adiciona_texto(self.consola, str(self.simulador) + "\nSimulador pronto a correr!!!")
+        self.altera_estado_botao(self.botao_corre, NORMAL)
 
     def corre_simulador(self):
         if self.simulador is not None:
@@ -94,23 +95,59 @@ class GUI:
             self.adiciona_texto(self.consola, "\nSimulador nao correu!!!")
 
     def restora_simulador(self):
+        self.stream.clear()
+        self.simulador.restora_simulador()
         self.consola.config(state=NORMAL)
         self.consola.delete(1.0, END)
         self.consola.config(state=DISABLED)
         self.adiciona_texto(self.consola, "Simulador reiniciado!!!")
+        self.adiciona_texto(self.consola, "-" * 100)
         self.altera_estado_botao(self.botao_corre, NORMAL)
         self.altera_estado_botao(self.botao_restora, DISABLED)
+        self.adiciona_texto(self.consola, str(self.simulador) + "\nSimulador pronto a correr!!!")
+
+    def altera_debug(self):
+        if self.simulador:
+            self.simulador.debug = self.debug.get()
+        self.adiciona_texto(self.consola, "Debug alterado para " + str(self.debug.get()))
+
+    def altera_registrar(self):
+        if self.simulador:
+            self.simulador.registrar = self.registrar.get()
+            self.simulador.altera_registrar(self.simulador.registrar)
+        self.adiciona_texto(self.consola, "Registar alterado para " + str(self.registrar.get()))
+
+    def altera_seed_aleatoria(self):
+        if self.simulador:
+            self.simulador.seed_aleatoria = self.seed_aleatoria.get()
+            self.simulador.altera_aleatoriedade(self.simulador.seed_aleatoria)
+        self.adiciona_texto(self.consola, "Aleatorio alterado para " + str(self.seed_aleatoria.get()))
 
     def mostra(self):
         self.raiz.update()
         self.centra_janela(self.raiz)
-
-        for i in range(200):
-            self.adiciona_texto(self.consola, ["linha numero ", i])
-
+        self.adiciona_intro()
         self.raiz.mainloop()
 
+    def adiciona_intro(self):
+        self.consola.config(state=NORMAL)
+        self.consola.insert(INSERT, "Bem-vindos ao Simulador \n")
+        self.consola.insert(INSERT, "Primórdios de um Império Fabril\n\n")
+        self.consola.insert(INSERT, "(C) Copyright 2017 Meme Industries All Rights Reserved\n\n")
+        self.consola.tag_add("intro", "1.0", "5.0")
+        self.consola.tag_config("intro", justify="center")
+        self.consola.tag_add("nome_programa", "2.0", "3.0")
+        self.consola.tag_config("nome_programa", font=("Arial", 16, "bold", "italic"), foreground="blue")
+        self.consola.tag_add("copyright", "4.0", "5.0")
+        self.consola.tag_config("copyright", foreground="#40c050")
+        self.consola.config(state=DISABLED)
+        self.consola.see(END)
+
     def altera_estado_botao(self, botao: Button, estado):
+        if estado == NORMAL or estado == DISABLED:
+            botao.config(state=estado)
+
+    def altera_estado_check(self, botao: Checkbutton, estado):
         if estado == NORMAL or estado == DISABLED:
             botao.config(state=estado)
 
