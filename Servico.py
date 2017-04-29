@@ -53,6 +53,22 @@ class Servico:
     def altera_aleatoriedade(self, altera: bool):
         rand_generator.randst(self.semente, self.stream, altera)
 
+    def altera_maquinas(self, maquinas: int):
+        self.numero_maquinas = maquinas
+
+    def altera_tempo(self, media: float, desvio: float):
+        self.media = media
+        self.desvio = desvio
+
+    def restora_servico(self):
+        self.espera = []
+        self.ocupadas = 0
+        self.atendidos = 0
+        self.temp_ultimo = self.simulador.tempo
+        self.soma_temp_espera = 0
+        self.soma_temp_servico = 0
+        rand_generator.randst(self.semente, self.stream, self.simulador.seed_aleatoria)
+
     def get_tempo(self):
         # GENERATOR POWER
         tempo = None
