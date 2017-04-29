@@ -121,6 +121,7 @@ class Simulador:
         self.lista.insere_evento(evento)
 
     def altera_aleatoriedade(self, altera: bool):
+        self.seed_aleatoria = altera
         for serv in self.servicos:
             serv.altera_aleatoriedade(altera)
         for peca in self.tipo_pecas:
@@ -154,8 +155,10 @@ class Simulador:
             for l in strings:
                 Registrador.regista(self.registo, l)
             if self.gui_stream is not None:
-                self.gui_stream.append("\nDados de registo salvos em " + Registrador.diretorio_registos + " -> " + self.registo.name)
+                self.gui_stream.append(
+                    "\nDados de registo salvos em " + Registrador.diretorio_registos + " -> " + self.registo.name)
             print("\nDados de registo salvos em " + Registrador.diretorio_registos + " -> " + self.registo.name)
+            Registrador.fecha_registo(self.registo)
 
     def executa_dia(self, dias_executados: int):
         temp_string = "\n\n||||||||||||||||||||\n\n"
@@ -198,10 +201,10 @@ class Simulador:
         strings = []
         for i in range(self.numero_pecas):
             strings.append("\n\n|----------------- Estatisticas da Peca " + str(
-                self.tipo_pecas[i]) + " ------------------------|")
+                self.tipo_pecas[i].nome) + " ------------------------|")
             for j in range(len(self.matriz_servicos[i])):
                 strings.append("\n\n------------ Resultados " + str(
-                    self.matriz_servicos[i][j]) + "---------------\n\n")
+                    self.matriz_servicos[i][j].nome) + "---------------\n\n")
                 relat_servico = self.matriz_servicos[i][j].relat()
                 for string in relat_servico:
                     strings.append(string)
@@ -210,7 +213,7 @@ class Simulador:
 
         lucro_total = 0
         for i in range(self.numero_pecas):
-            strings.append("Peca " + str(self.tipo_pecas[i]) + ":")
+            strings.append("Peca " + str(self.tipo_pecas[i].nome) + ":")
             strings.append("\tPreco por Peca: " + str(self.tipo_pecas[i].custo) + " euros")
             strings.append("\tPecas Criadas: " + str(self.pecas_criadas[i]))
             strings.append("\tPecas Vendidadas: " + str(self.pecas_vendidas[i]))
@@ -268,11 +271,10 @@ class Simulador:
                                                                                      indice + 1:]
 
     def altera_maquinas_servico(self, indice: int, maquinas: int):
-        self.servicos[indice].numero_maquinas = maquinas
+        self.servicos[indice].altera_maquinas_servico(maquinas)
 
     def altera_tempo_servico(self, indice: int, media: float, desvio: float):
-        self.servicos[indice].media = media
-        self.servicos[indice].desvio = desvio
+        self.servicos[indice].altera_tempo(media, desvio)
 
     def altera_tempo_chegada(self, indice: int, media: float):
         self.tipo_pecas[indice].altera_media(media)
