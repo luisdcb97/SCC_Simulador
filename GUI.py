@@ -46,7 +46,17 @@ class GUI:
                                  relief=RAISED, activebackground="#2AAF51", activeforeground="#3A3F42",
                                  command=self.cria_simulador)
 
-        self.debug = F
+        self.debug = BooleanVar(master=self.side_frame, value=False)
+        self.registrar = BooleanVar(master=self.side_frame, value=True)
+        self.seed_aleatoria = BooleanVar(master=self.side_frame, value=False)
+
+        self.check_debug = Checkbutton(self.side_frame, text="Debug", command=self.altera_debug, variable=self.debug,
+                                       state=DISABLED
+                                       )
+        self.check_registrar = Checkbutton(self.side_frame, text="Registar", command=self.altera_registrar,
+                                           variable=self.registrar)
+        self.check_seed_aleatoria = Checkbutton(self.side_frame, text="Seed Aleatoria",
+                                                command=self.altera_seed_aleatoria, variable=self.seed_aleatoria)
 
         # Colocar os frames na aplicacao
         self.side_frame.pack(side=LEFT, fill=Y)
@@ -60,6 +70,9 @@ class GUI:
 
         # Colocar cenas no frame da esquerda
         self.botao_cria.pack(side=TOP)
+        self.check_debug.pack(side=BOTTOM)
+        self.check_registrar.pack(side=BOTTOM)
+        self.check_seed_aleatoria.pack(side=BOTTOM)
 
         self.simulador = None
         self.stream = []
