@@ -46,6 +46,16 @@ class GUI:
                                  relief=RAISED, activebackground="#2AAF51", activeforeground="#3A3F42",
                                  command=self.cria_simulador)
 
+        self.botao_cria_c1 = Button(self.side_frame, text="Cria C1", bg="#3A3F42", fg="#2AAF51",
+                                    font=("Arial", 18, "bold"),
+                                    relief=RAISED, activebackground="#2AAF51", activeforeground="#3A3F42",
+                                    command=self.cria_simulador_c1)
+
+        self.botao_cria_c2 = Button(self.side_frame, text="Cria C2", bg="#3A3F42", fg="#2AAF51",
+                                    font=("Arial", 18, "bold"),
+                                    relief=RAISED, activebackground="#2AAF51", activeforeground="#3A3F42",
+                                    command=self.cria_simulador_c2)
+
         self.debug = BooleanVar(master=self.side_frame, value=False)
         self.registrar = BooleanVar(master=self.side_frame, value=True)
         self.seed_aleatoria = BooleanVar(master=self.side_frame, value=False)
@@ -70,6 +80,8 @@ class GUI:
 
         # Colocar cenas no frame da esquerda
         self.botao_cria.pack(side=TOP)
+        self.botao_cria_c1.pack(side=TOP)
+        self.botao_cria_c2.pack(side=TOP)
         self.check_debug.pack(side=BOTTOM)
         self.check_registrar.pack(side=BOTTOM)
         self.check_seed_aleatoria.pack(side=BOTTOM)
@@ -78,10 +90,30 @@ class GUI:
         self.stream = []
 
     def cria_simulador(self):
+        self.stream.clear()
         self.simulador = Simulador.Simulador(registrar=self.registrar.get(), debug=self.debug.get(),
                                              aleatorio=self.seed_aleatoria.get(), gui_stream=self.stream)
         self.adiciona_texto(self.consola, str(self.simulador) + "\nSimulador pronto a correr!!!")
         self.altera_estado_botao(self.botao_corre, NORMAL)
+        self.altera_estado_botao(self.botao_restora, DISABLED)
+
+    def cria_simulador_c1(self):
+        self.stream.clear()
+        self.simulador = Simulador.Simulador(registrar=self.registrar.get(), debug=self.debug.get(),
+                                             aleatorio=self.seed_aleatoria.get(), gui_stream=self.stream)
+        self.simulador.altera_maquinas_servico(4, 3)
+        self.adiciona_texto(self.consola, str(self.simulador) + "\nSimulador pronto a correr!!!")
+        self.altera_estado_botao(self.botao_corre, NORMAL)
+        self.altera_estado_botao(self.botao_restora, DISABLED)
+
+    def cria_simulador_c2(self):
+        self.stream.clear()
+        self.simulador = Simulador.Simulador(registrar=self.registrar.get(), debug=self.debug.get(),
+                                             aleatorio=self.seed_aleatoria.get(), gui_stream=self.stream)
+        self.simulador.altera_tempo_servico(4, 1.7, 1)
+        self.adiciona_texto(self.consola, str(self.simulador) + "\nSimulador pronto a correr!!!")
+        self.altera_estado_botao(self.botao_corre, NORMAL)
+        self.altera_estado_botao(self.botao_restora, DISABLED)
 
     def corre_simulador(self):
         if self.simulador is not None:
