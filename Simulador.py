@@ -279,6 +279,9 @@ class Simulador:
     def altera_tempo_chegada(self, indice: int, media: float):
         self.tipo_pecas[indice].altera_media(media)
 
+    def altera_custo_peca(self, indice: int, custo: float):
+        self.tipo_pecas[indice].altera_custo(custo)
+
     def altera_horas(self, horas: int):
         self.horas = horas
 

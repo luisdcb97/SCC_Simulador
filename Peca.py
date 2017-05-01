@@ -34,6 +34,9 @@ class Peca:
     def altera_metodo(self, metodo=None):
         self.metodo = metodo
 
+    def altera_custo(self, custo):
+        self.custo = custo
+
     def altera_aleatoriedade(self, altera: bool):
         rand_generator.randst(self.semente, self.stream, altera)
         self.seed_aleatoria = altera
