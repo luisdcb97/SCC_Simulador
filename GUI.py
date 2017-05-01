@@ -3,7 +3,7 @@
 
 from tkinter import *
 import Simulador
-import time
+import GUI_Editor
 
 largura_minima_janela = 800
 altura_minima_janela = 560
@@ -13,7 +13,7 @@ class GUI:
     def __init__(self):
         self.raiz = Tk()
         self.raiz.wm_title("Primórdios de um Império Fabril")
-        self.raiz.iconbitmap("Icon.ico")
+        self.raiz.wm_iconbitmap(default="Icon.ico")
         self.dimensoes_minimas = {"largura": 800, "altura": 560}
         self.raiz.minsize(width=self.dimensoes_minimas["largura"], height=self.dimensoes_minimas["altura"])
 
@@ -80,6 +80,8 @@ class GUI:
         self.entry_horas.bind("<FocusOut>", self.altera_foco_escrita)
         self.entry_horas.bind("<Return>", self.insere_hora)
 
+        self.botao_abre_editor = Button(self.top_frame, text="Abrir Editor", command=self.abre_editor, state=DISABLED)
+
         # Colocar os frames na aplicacao
         self.side_frame.pack(side=LEFT, fill=Y)
         self.top_frame.pack(side=TOP, fill=X)
@@ -89,6 +91,7 @@ class GUI:
         # Colocar cenas no frame de cima
         self.botao_corre.pack(side=LEFT)
         self.botao_restora.pack(side=LEFT)
+        self.botao_abre_editor.pack(side=RIGHT)
 
         # Colocar cenas no frame da esquerda
         self.botao_cria.pack(side=TOP)
@@ -106,17 +109,40 @@ class GUI:
         self.simulador = None
         self.stream = []
 
+        self.tooltips = dict()
+        self.tooltips[self.botao_corre] = GUI_Editor.ToolTip(self.botao_corre,
+                                                             "Executa o Simulador durante o tempo especificado e imprime as estatísticas para a consola")
+        self.tooltips[self.botao_cria] = GUI_Editor.ToolTip(self.botao_cria,
+                                                            "Cria o Simulador default e imprime as suas especificações para a consola")
+        self.tooltips[self.botao_cria_c1] = GUI_Editor.ToolTip(self.botao_cria_c1,
+                                                               "Cria o Simulador da aline c)i e imprime as suas especificações para a consola")
+        self.tooltips[self.botao_cria_c2] = GUI_Editor.ToolTip(self.botao_cria_c2,
+                                                               "Cria o Simulador da aline c)iie imprime as suas especificações para a consola")
+        self.tooltips[self.botao_restora] = GUI_Editor.ToolTip(self.botao_restora,
+                                                               "Restora o Simulador aos dados iniciais após ter corrido, permitindo correr o mesmo simulador várias vezes")
+        self.tooltips[self.botao_abre_editor] = GUI_Editor.ToolTip(self.botao_abre_editor,
+                                                                   "Abre a janela de edição do Simulador atual")
+        self.tooltips[self.check_seed_aleatoria] = GUI_Editor.ToolTip(self.check_seed_aleatoria,
+                                                                      "Ativa a utilização de sementes baseados no relogio de computador para a geração de numeros aleatórios")
+        self.tooltips[self.check_registrar] = GUI_Editor.ToolTip(self.check_registrar,
+                                                                 "Ativa o registo do simulador e da sua execução para um ficheiro no disco")
+        self.tooltips[self.check_debug] = GUI_Editor.ToolTip(self.check_debug,
+                                                             "[DESATIVADO] Ativa a impressão de dados extra sobre a execução do simulador para a consola")
+
     def cria_simulador(self):
         self.stream.clear()
         self.simulador = Simulador.Simulador(registrar=self.registrar.get(), debug=self.debug.get(),
                                              aleatorio=self.seed_aleatoria.get(), gui_stream=self.stream)
         self.adiciona_texto(self.consola, str(self.simulador) + "\nSimulador pronto a correr!!!")
         self.altera_estado_botao(self.botao_corre, NORMAL)
+        self.altera_estado_botao(self.botao_abre_editor, NORMAL)
         self.altera_estado_botao(self.botao_restora, DISABLED)
         self.entry_dias.config(state=NORMAL)
         self.entry_horas.config(state=NORMAL)
-        self.entry_dias.insert("1", str(self.simulador.dias))
-        self.entry_horas.insert("1", str(self.simulador.horas))
+        self.entry_dias.delete(0, END)
+        self.entry_dias.insert(0, str(self.simulador.dias))
+        self.entry_horas.delete(0, END)
+        self.entry_horas.insert(0, str(self.simulador.horas))
 
     def cria_simulador_c1(self):
         self.cria_simulador()
@@ -148,6 +174,22 @@ class GUI:
         self.altera_estado_botao(self.botao_corre, NORMAL)
         self.altera_estado_botao(self.botao_restora, DISABLED)
         self.adiciona_texto(self.consola, str(self.simulador) + "\nSimulador pronto a correr!!!")
+
+    def abre_editor(self):
+        dicionario = dict()
+        dicionario[self.botao_corre] = self.botao_corre.cget("state")
+        dicionario[self.botao_restora] = self.botao_restora.cget("state")
+
+        self.altera_estado_botao(self.botao_abre_editor, DISABLED)
+        self.altera_estado_botao(self.botao_cria, DISABLED)
+        self.altera_estado_botao(self.botao_cria_c1, DISABLED)
+        self.altera_estado_botao(self.botao_cria_c2, DISABLED)
+        self.altera_estado_botao(self.botao_corre, DISABLED)
+        self.altera_estado_botao(self.botao_restora, DISABLED)
+        self.altera_estado_check(self.check_seed_aleatoria, DISABLED)
+        self.altera_estado_check(self.check_registrar, DISABLED)
+
+        editor = GUI_Editor.GUIEditor(self.simulador, self, dicionario)
 
     def altera_debug(self):
         if self.simulador:
@@ -215,7 +257,6 @@ class GUI:
             self.simulador.altera_dias(valor)
             self.adiciona_texto(self.consola, "Simulador alterado para correr durante " + str(valor) + " dias")
 
-
     def insere_hora(self, evento):
         widget = evento.widget
         try:
@@ -234,8 +275,8 @@ class GUI:
         cor_original = widget.cget("bg")
         tempo = 250
         for i in range(1, 10, 2):
-            widget.after(i*tempo, lambda: widget.config(bg="red"))
-            widget.after((i+1)*tempo, lambda: widget.config(bg=cor_original))
+            widget.after(i * tempo, lambda: widget.config(bg="red"))
+            widget.after((i + 1) * tempo, lambda: widget.config(bg=cor_original))
 
     @staticmethod
     def centra_janela(janela: Tk):
@@ -261,7 +302,7 @@ class GUI:
             for elem in texto:
                 adiciona += str(elem) + "\n"
         contentor.config(state=NORMAL)
-        contentor.insert(INSERT, adiciona)
+        contentor.insert(END, adiciona)
         contentor.config(state=DISABLED)
         contentor.see(END)
 
